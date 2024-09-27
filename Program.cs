@@ -47,12 +47,20 @@ void DrawBoard()
                 }
                 else
                 {
-                    Console.Write($"[{GetNumberForTile(x-1,y-1)}] ");
+                    int num = GetNumberForTile(x-1,y-1);
+                    if(num == 0)
+                    {
+                        Console.Write($"[□] ");
+                    }
+                    else
+                    {
+                        Console.Write($"[{num}] ");
+                    }
                 }
             }
             else
             {
-                Console.Write($"[ ] ");
+                Console.Write($"[■] ");
             }
         }
         Console.WriteLine();
