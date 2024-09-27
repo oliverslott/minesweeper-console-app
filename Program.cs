@@ -13,6 +13,7 @@ SpawnBombs();
 Console.WriteLine("Controls: Arrow keys to move cursor and spacebar to open tile");
 while (true)
 {
+    CheckIfWon();
     if(!wonGame && !lostGame)
     {
         DrawBoard();
@@ -96,7 +97,7 @@ void DrawBoard()
                 Console.Write(" ");
             }
 
-            if (openTiles[x, y])
+            if (true)
             {
                 if (tiles[x, y] == 1)
                 {
@@ -137,7 +138,7 @@ void DrawBoard()
 void OpenTile(int x, int y)
 {
     openTiles[x, y] = true;
-    if (tiles[x, y] == 1)
+    if (tiles[x, y] == 1) //Tile is a bomb-tile
     {
         lostGame = true;
         DrawBoard(); //Draw the board one last time
@@ -187,6 +188,27 @@ void OpenTile(int x, int y)
     if(x-1 >= 0 && y+1<tileSize && tiles[x-1,y+1] != 1 && !openTiles[x-1,y+1])
     {
         OpenTile(x-1,y+1);
+    }
+}
+
+void CheckIfWon()
+{
+    int tilesOpened = 0;
+    for(int x = 0; x < openTiles.GetLength(0); x++)
+    {
+        for(int y = 0; y < openTiles.GetLength(1); y++)
+        {
+            if (openTiles[x,y])
+            {
+                tilesOpened++;
+            }
+        }
+    }
+    if(tilesOpened == tileSize * tileSize - amountOfBombs)
+    {
+        DrawBoard();
+        Console.WriteLine("You won!");
+        wonGame = true;
     }
 }
 
@@ -246,6 +268,7 @@ void SpawnBombs()
         int randX = rand.Next(0, tileSize);
         int randY = rand.Next(0, tileSize);
         tiles[randX, randY] = 1;
+        Console.WriteLine(i);
     }
     //int randX = r
 }
