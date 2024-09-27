@@ -3,14 +3,18 @@
 const int tileSize = 8;
 const int amountOfBombs = 4;
 int[,] tiles = new int[tileSize, tileSize];
+bool[,] openTiles = new bool[tileSize, tileSize];
 
 SpawnBombs();
 
 while(true)
 {
     DrawBoard();
-    Console.Write("Click tile at(x,y): ");
-    Console.ReadLine();
+    Console.Write("Click tile at(\"x,y\"): ");
+    string[] input = Console.ReadLine().Split(',');
+    int x = int.Parse(input[0]);
+    int y = int.Parse(input[1]);
+    OpenTile(x,y);
 }
 
 void DrawBoard()
@@ -35,17 +39,29 @@ void DrawBoard()
                 continue;
             }
             //Console.Write($"{tiles[x-1,y-1]} ");
-            if(tiles[x-1,y-1] == 1)
+            if(openTiles[x-1,y-1])
             {
-                Console.Write($"[X] ");
+                if(tiles[x-1,y-1] == 1)
+                {
+                    Console.Write($"[X] ");
+                }
+                else
+                {
+                    Console.Write($"[{GetNumberForTile(x-1,y-1)}] ");
+                }
             }
             else
             {
-                Console.Write($"[{GetNumberForTile(x-1,y-1)}] ");
+                Console.Write($"[ ] ");
             }
         }
         Console.WriteLine();
     }
+}
+
+void OpenTile(int x, int y)
+{
+    openTiles[x, y] = true;
 }
 
 int GetNumberForTile(int x, int y)
