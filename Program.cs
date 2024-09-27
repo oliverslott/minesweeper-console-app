@@ -2,8 +2,8 @@
 
 const byte tileSize = 8;
 const byte amountOfBombs = 8;
-byte[,] tiles = new byte[tileSize, tileSize];
-bool[,] openTiles = new bool[tileSize, tileSize];
+byte[,] tiles = new byte[tileSize, tileSize]; //0 = no bomb, 1 = bomb
+bool[,] openTiles = new bool[tileSize, tileSize]; //false = not open, true = open
 byte selectedX = 0;
 byte selectedY = 0;
 
@@ -86,6 +86,7 @@ void DrawBoard()
             {
                 Console.Write(" ");
             }
+
             if (openTiles[x, y])
             {
                 if (tiles[x, y] == 1)
@@ -97,7 +98,7 @@ void DrawBoard()
                     int num = GetNumberForTile(x, y);
                     if (num == 0)
                     {
-                        Console.Write($"□");
+                        Console.Write($" ");
                     }
                     else
                     {
@@ -142,40 +143,40 @@ void OpenTile(int x, int y)
         OpenTile(x, y + 1);
     }
     // //Below-right
-    // if(x+1<tileSize && y+1<tileSize && tiles[x+1,y+1] != 1 && !openTiles[x+1,y+1])
-    // {
-    //     OpenTile(x+1,y+1);
-    // }
+    if(x+1<tileSize && y+1<tileSize && tiles[x+1,y+1] != 1 && !openTiles[x+1,y+1])
+    {
+        OpenTile(x+1,y+1);
+    }
     //Right
     if (x + 1 < tileSize && tiles[x + 1, y] != 1 && !openTiles[x + 1, y])
     {
         OpenTile(x + 1, y);
     }
     // //Top-right
-    // if(y-1 >= 0 && x+1<tileSize && tiles[x+1,y-1] != 1 && !openTiles[x+1,y-1])
-    // {
-    //     OpenTile(x+1,y-1);
-    // }
+    if(y-1 >= 0 && x+1<tileSize && tiles[x+1,y-1] != 1 && !openTiles[x+1,y-1])
+    {
+        OpenTile(x+1,y-1);
+    }
     //Top
     if (y - 1 >= 0 && tiles[x, y - 1] != 1 && !openTiles[x, y - 1])
     {
         OpenTile(x, y - 1);
     }
     // //Top-left
-    // if(y-1 >= 0 && x-1 >= 0 && tiles[x-1,y-1] != 1 && !openTiles[x-1,y-1])
-    // {
-    //     OpenTile(x-1,y-1);
-    // }
+    if(y-1 >= 0 && x-1 >= 0 && tiles[x-1,y-1] != 1 && !openTiles[x-1,y-1])
+    {
+        OpenTile(x-1,y-1);
+    }
     //Left 
     if (x - 1 >= 0 && tiles[x - 1, y] != 1 && !openTiles[x - 1, y])
     {
         OpenTile(x - 1, y);
     }
-    // //Below-left
-    // if(x-1 >= 0 && y+1<tileSize && tiles[x-1,y+1] != 1 && !openTiles[x-1,y+1])
-    // {
-    //     OpenTile(x-1,y+1);
-    // }
+    //Below-left
+    if(x-1 >= 0 && y+1<tileSize && tiles[x-1,y+1] != 1 && !openTiles[x-1,y+1])
+    {
+        OpenTile(x-1,y+1);
+    }
 }
 
 int GetNumberForTile(int x, int y)
