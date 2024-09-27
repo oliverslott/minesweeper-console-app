@@ -9,12 +9,13 @@ byte selectedY = 0;
 bool lostGame = false;
 bool wonGame = false;
 bool placedFirstTile = false;
+bool quit = false;
 
-Console.WriteLine("Controls: Arrow keys to move cursor and spacebar to open tile");
+Console.WriteLine("Controls: Arrow keys to move cursor, spacebar to open tile and Q to quit");
 while (true)
 {
     CheckIfWon();
-    if (!wonGame && !lostGame)
+    if (!wonGame && !lostGame && !quit)
     {
         DrawBoard();
         Controls();
@@ -72,6 +73,9 @@ void Controls()
             break;
         case ConsoleKey.Spacebar:
             OpenTile(selectedX, selectedY);
+            break;
+        case ConsoleKey.Q:
+            quit = true;
             break;
     }
     //string[] input = Console.ReadLine().Split(',');
