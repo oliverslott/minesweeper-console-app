@@ -97,7 +97,7 @@ void DrawBoard()
                 Console.Write(" ");
             }
 
-            if (true)
+            if (openTiles[x, y])
             {
                 if (tiles[x, y] == 1)
                 {
@@ -265,10 +265,18 @@ void SpawnBombs()
     Random rand = new Random();
     for (int i = 0; i < amountOfBombs; i++)
     {
-        int randX = rand.Next(0, tileSize);
-        int randY = rand.Next(0, tileSize);
+        int randX;
+        int randY;
+        //Loop to prevent bombs spawning the same location; breaking the game
+        while(true)
+        {
+            randX = rand.Next(0, tileSize);
+            randY = rand.Next(0, tileSize);
+            if(tiles[randX, randY] != 1)
+            {
+                break;
+            }
+        }
         tiles[randX, randY] = 1;
-        Console.WriteLine(i);
     }
-    //int randX = r
 }
