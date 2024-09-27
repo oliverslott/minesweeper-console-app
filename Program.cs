@@ -1,4 +1,6 @@
-﻿const int tileSize = 8;
+﻿//Made by Oliver
+
+const int tileSize = 8;
 const int amountOfBombs = 4;
 int[,] tiles = new int[tileSize, tileSize];
 
@@ -33,15 +35,65 @@ void DrawBoard()
                 continue;
             }
             //Console.Write($"{tiles[x-1,y-1]} ");
-            Console.Write($"[{GetNumberForTile()}] ");
+            if(tiles[x-1,y-1] == 1)
+            {
+                Console.Write($"[X] ");
+            }
+            else
+            {
+                Console.Write($"[{GetNumberForTile(x-1,y-1)}] ");
+            }
         }
         Console.WriteLine();
     }
 }
 
-int GetNumberForTile()
+int GetNumberForTile(int x, int y)
 {
-    return 0;
+    //Console.WriteLine($"{x},{y}");
+    int bombsAroundTile = 0;
+
+    //Below
+    if(y+1<tileSize && tiles[x,y+1] == 1)
+    {
+        bombsAroundTile++;
+    }
+    //Below-right
+    if(x+1<tileSize && y+1<tileSize && tiles[x+1,y+1] == 1)
+    {
+        bombsAroundTile++;
+    }
+    //Right
+    if(x+1<tileSize && tiles[x+1,y] == 1)
+    {
+        bombsAroundTile++;
+    }
+    //Top-right
+    if(y-1 >= 0 && x+1<tileSize && tiles[x+1,y-1] == 1)
+    {
+        bombsAroundTile++;
+    }
+    //Top
+    if(y-1 >= 0 && tiles[x,y-1] == 1)
+    {
+        bombsAroundTile++;
+    }
+    //Top-left
+    if(y-1 >= 0 && x-1 >= 0 && tiles[x-1,y-1] == 1)
+    {
+        bombsAroundTile++;
+    }
+    //Left 
+    if(x-1 >= 0 && tiles[x-1,y] == 1)
+    {
+        bombsAroundTile++;
+    }
+    //Below-left
+    if(x-1 >= 0 && y+1<tileSize && tiles[x-1,y+1] == 1)
+    {
+        bombsAroundTile++;
+    }
+    return bombsAroundTile;
 }
 
 void SpawnBombs()
