@@ -1,7 +1,7 @@
 ﻿//Made by Oliver
 
 const int tileSize = 8;
-const int amountOfBombs = 4;
+const int amountOfBombs = 8;
 int[,] tiles = new int[tileSize, tileSize];
 bool[,] openTiles = new bool[tileSize, tileSize];
 
@@ -12,8 +12,8 @@ while(true)
     DrawBoard();
     Console.Write("Click tile at(\"x,y\"): ");
     string[] input = Console.ReadLine().Split(',');
-    int x = int.Parse(input[0]);
-    int y = int.Parse(input[1]);
+    int x = int.Parse(input[1]);
+    int y = int.Parse(input[0]);
     OpenTile(x,y);
 }
 
@@ -69,7 +69,56 @@ void DrawBoard()
 
 void OpenTile(int x, int y)
 {
+    if(tiles[x,y] == 1)
+    {
+        Console.WriteLine("You hit a bomb. You lose!");
+        //return;
+    }
     openTiles[x, y] = true;
+    if(GetNumberForTile(x,y) > 0)
+    {
+        return;
+    }
+    //Below
+    if(y+1<tileSize && tiles[x,y+1] != 1 && !openTiles[x,y+1])
+    {
+        OpenTile(x,y+1);
+    }
+    // //Below-right
+    // if(x+1<tileSize && y+1<tileSize && tiles[x+1,y+1] != 1 && !openTiles[x+1,y+1])
+    // {
+    //     OpenTile(x+1,y+1);
+    // }
+    //Right
+    if(x+1<tileSize && tiles[x+1,y] != 1 && !openTiles[x+1,y])
+    {
+        OpenTile(x+1,y);
+    }
+    // //Top-right
+    // if(y-1 >= 0 && x+1<tileSize && tiles[x+1,y-1] != 1 && !openTiles[x+1,y-1])
+    // {
+    //     OpenTile(x+1,y-1);
+    // }
+    //Top
+    if(y-1 >= 0 && tiles[x,y-1] != 1 && !openTiles[x,y-1])
+    {
+        OpenTile(x,y-1);
+    }
+    // //Top-left
+    // if(y-1 >= 0 && x-1 >= 0 && tiles[x-1,y-1] != 1 && !openTiles[x-1,y-1])
+    // {
+    //     OpenTile(x-1,y-1);
+    // }
+    //Left 
+    if(x-1 >= 0 && tiles[x-1,y] != 1 && !openTiles[x-1,y])
+    {
+        OpenTile(x-1,y);
+    }
+    // //Below-left
+    // if(x-1 >= 0 && y+1<tileSize && tiles[x-1,y+1] != 1 && !openTiles[x-1,y+1])
+    // {
+    //     OpenTile(x-1,y+1);
+    // }
 }
 
 int GetNumberForTile(int x, int y)
@@ -119,6 +168,46 @@ int GetNumberForTile(int x, int y)
     }
     return bombsAroundTile;
 }
+
+// bool Below()
+// {
+//     return 
+// }
+
+// bool BelowRight()
+// {
+
+// }
+
+// bool Right()
+// {
+
+// }
+
+// bool TopRight()
+// {
+
+// }
+
+// bool Top()
+// {
+
+// }
+
+// bool TopLeft()
+// {
+
+// }
+
+// bool Left()
+// {
+
+// }
+
+// bool BelowLeft()
+// {
+
+// }
 
 void SpawnBombs()
 {
