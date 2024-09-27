@@ -8,13 +8,13 @@ byte selectedX = 0;
 byte selectedY = 0;
 bool lostGame = false;
 bool wonGame = false;
+bool placedFirstTile = false;
 
-SpawnBombs();
 Console.WriteLine("Controls: Arrow keys to move cursor and spacebar to open tile");
 while (true)
 {
     CheckIfWon();
-    if(!wonGame && !lostGame)
+    if (!wonGame && !lostGame)
     {
         DrawBoard();
         Controls();
@@ -31,7 +31,7 @@ void Controls()
     switch (Console.ReadKey().Key)
     {
         case ConsoleKey.LeftArrow:
-            if(selectedY == 0)
+            if (selectedY == 0)
             {
                 selectedY = tileSize - 1;
             }
@@ -41,7 +41,7 @@ void Controls()
             }
             break;
         case ConsoleKey.RightArrow:
-            if(selectedY == tileSize - 1)
+            if (selectedY == tileSize - 1)
             {
                 selectedY = 0;
             }
@@ -51,7 +51,7 @@ void Controls()
             }
             break;
         case ConsoleKey.UpArrow:
-            if(selectedX == 0)
+            if (selectedX == 0)
             {
                 selectedX = tileSize - 1;
             }
@@ -61,7 +61,7 @@ void Controls()
             }
             break;
         case ConsoleKey.DownArrow:
-            if(selectedX == tileSize - 1)
+            if (selectedX == tileSize - 1)
             {
                 selectedX = 0;
             }
@@ -88,7 +88,7 @@ void DrawBoard()
         for (int y = 0; y < tiles.GetLength(1); y++)
         {
             //Cursor
-            if(selectedX == x && selectedY == y)
+            if (selectedX == x && selectedY == y)
             {
                 Console.Write("[");
             }
@@ -97,32 +97,10 @@ void DrawBoard()
                 Console.Write(" ");
             }
 
-            if (openTiles[x, y])
-            {
-                if (tiles[x, y] == 1)
-                {
-                    Console.Write($"X");
-                }
-                else
-                {
-                    int num = GetNumberForTile(x, y);
-                    if (num == 0)
-                    {
-                        Console.Write($" ");
-                    }
-                    else
-                    {
-                        Console.Write($"{num}");
-                    }
-                }
-            }
-            else
-            {
-                Console.Write($"■");
-            }
+            DrawTile(x,y);
 
             //Cursor
-            if(selectedX == x && selectedY == y)
+            if (selectedX == x && selectedY == y)
             {
                 Console.Write("]");
             }
@@ -135,9 +113,43 @@ void DrawBoard()
     }
 }
 
+void DrawTile(int x, int y)
+{
+    if (openTiles[x, y])
+    {
+        if (tiles[x, y] == 1)
+        {
+            Console.Write($"X");
+        }
+        else
+        {
+            int num = GetNumberForTile(x, y);
+            if (num == 0)
+            {
+                Console.Write($" ");
+            }
+            else
+            {
+                Console.Write($"{num}");
+            }
+        }
+    }
+    else
+    {
+        Console.Write($"■");
+    }
+}
+
 void OpenTile(int x, int y)
 {
     openTiles[x, y] = true;
+    
+    if(!placedFirstTile)
+    {
+        placedFirstTile = true;
+        SpawnBombs();
+    }
+
     if (tiles[x, y] == 1) //Tile is a bomb-tile
     {
         lostGame = true;
@@ -155,9 +167,9 @@ void OpenTile(int x, int y)
         OpenTile(x, y + 1);
     }
     // //Below-right
-    if(x+1<tileSize && y+1<tileSize && tiles[x+1,y+1] != 1 && !openTiles[x+1,y+1])
+    if (x + 1 < tileSize && y + 1 < tileSize && tiles[x + 1, y + 1] != 1 && !openTiles[x + 1, y + 1])
     {
-        OpenTile(x+1,y+1);
+        OpenTile(x + 1, y + 1);
     }
     //Right
     if (x + 1 < tileSize && tiles[x + 1, y] != 1 && !openTiles[x + 1, y])
@@ -165,9 +177,9 @@ void OpenTile(int x, int y)
         OpenTile(x + 1, y);
     }
     // //Top-right
-    if(y-1 >= 0 && x+1<tileSize && tiles[x+1,y-1] != 1 && !openTiles[x+1,y-1])
+    if (y - 1 >= 0 && x + 1 < tileSize && tiles[x + 1, y - 1] != 1 && !openTiles[x + 1, y - 1])
     {
-        OpenTile(x+1,y-1);
+        OpenTile(x + 1, y - 1);
     }
     //Top
     if (y - 1 >= 0 && tiles[x, y - 1] != 1 && !openTiles[x, y - 1])
@@ -175,9 +187,9 @@ void OpenTile(int x, int y)
         OpenTile(x, y - 1);
     }
     // //Top-left
-    if(y-1 >= 0 && x-1 >= 0 && tiles[x-1,y-1] != 1 && !openTiles[x-1,y-1])
+    if (y - 1 >= 0 && x - 1 >= 0 && tiles[x - 1, y - 1] != 1 && !openTiles[x - 1, y - 1])
     {
-        OpenTile(x-1,y-1);
+        OpenTile(x - 1, y - 1);
     }
     //Left 
     if (x - 1 >= 0 && tiles[x - 1, y] != 1 && !openTiles[x - 1, y])
@@ -185,26 +197,26 @@ void OpenTile(int x, int y)
         OpenTile(x - 1, y);
     }
     //Below-left
-    if(x-1 >= 0 && y+1<tileSize && tiles[x-1,y+1] != 1 && !openTiles[x-1,y+1])
+    if (x - 1 >= 0 && y + 1 < tileSize && tiles[x - 1, y + 1] != 1 && !openTiles[x - 1, y + 1])
     {
-        OpenTile(x-1,y+1);
+        OpenTile(x - 1, y + 1);
     }
 }
 
 void CheckIfWon()
 {
     int tilesOpened = 0;
-    for(int x = 0; x < openTiles.GetLength(0); x++)
+    for (int x = 0; x < openTiles.GetLength(0); x++)
     {
-        for(int y = 0; y < openTiles.GetLength(1); y++)
+        for (int y = 0; y < openTiles.GetLength(1); y++)
         {
-            if (openTiles[x,y])
+            if (openTiles[x, y])
             {
                 tilesOpened++;
             }
         }
     }
-    if(tilesOpened == tileSize * tileSize - amountOfBombs)
+    if (tilesOpened == tileSize * tileSize - amountOfBombs)
     {
         DrawBoard();
         Console.WriteLine("You won!");
@@ -268,11 +280,11 @@ void SpawnBombs()
         int randX;
         int randY;
         //Loop to prevent bombs spawning the same location; breaking the game
-        while(true)
+        while (true)
         {
             randX = rand.Next(0, tileSize);
             randY = rand.Next(0, tileSize);
-            if(tiles[randX, randY] != 1)
+            if (tiles[randX, randY] != 1 && !openTiles[randX, randY]) //Don't spawn bomb on first clicked tile
             {
                 break;
             }
