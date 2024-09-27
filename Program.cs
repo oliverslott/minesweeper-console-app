@@ -6,13 +6,22 @@ byte[,] tiles = new byte[tileSize, tileSize]; //0 = no bomb, 1 = bomb
 bool[,] openTiles = new bool[tileSize, tileSize]; //false = not open, true = open
 byte selectedX = 0;
 byte selectedY = 0;
+bool lostGame = false;
+bool wonGame = false;
 
 SpawnBombs();
 Console.WriteLine("Controls: Arrow keys to move cursor and spacebar to open tile");
 while (true)
 {
-    DrawBoard();
-    Controls();
+    if(!wonGame && !lostGame)
+    {
+        DrawBoard();
+        Controls();
+    }
+    else
+    {
+        break;
+    }
 }
 
 void Controls()
@@ -127,12 +136,14 @@ void DrawBoard()
 
 void OpenTile(int x, int y)
 {
+    openTiles[x, y] = true;
     if (tiles[x, y] == 1)
     {
+        lostGame = true;
+        DrawBoard(); //Draw the board one last time
         Console.WriteLine("You hit a bomb. You lose!");
-        //return;
+        return;
     }
-    openTiles[x, y] = true;
     if (GetNumberForTile(x, y) > 0)
     {
         return;
