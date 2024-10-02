@@ -93,9 +93,9 @@ void Controls()
 void DrawBoard()
 {
     Console.WriteLine();
-    for (int x = 0; x < bombTiles.GetLength(0); x++)
+    for (int x = 0; x < tileSize; x++)
     {
-        for (int y = 0; y < bombTiles.GetLength(1); y++)
+        for (int y = 0; y < tileSize; y++)
         {
             //Cursor
             if (selectedX == x && selectedY == y)
