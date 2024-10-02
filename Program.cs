@@ -222,7 +222,7 @@ void OpenTile(int x, int y)
 
 void FlagTile(int x, int y)
 {
-    flaggedTile[x,y] = true;
+    flaggedTile[x,y] = !flaggedTile[x,y];
 }
 
 void CheckIfWon()
