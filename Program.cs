@@ -4,6 +4,7 @@ const byte tileSize = 8;
 const byte amountOfBombs = 8;
 byte[,] tiles = new byte[tileSize, tileSize]; //0 = no bomb, 1 = bomb
 bool[,] openTiles = new bool[tileSize, tileSize]; //false = not open, true = open
+bool[,] flaggedTile = new bool[tileSize, tileSize];
 byte selectedX = 0;
 byte selectedY = 0;
 bool lostGame = false;
@@ -11,7 +12,7 @@ bool wonGame = false;
 bool placedFirstTile = false;
 bool quit = false;
 
-Console.WriteLine("Controls: Arrow keys to move cursor, spacebar to open tile and Q to quit");
+Console.WriteLine("Controls: Arrow keys to move cursor, spacebar to open tile, F for flag and Q to quit");
 while (true)
 {
     CheckIfWon();
@@ -75,6 +76,9 @@ void Controls()
             break;
         case ConsoleKey.Spacebar:
             OpenTile(selectedX, selectedY);
+            break;
+        case ConsoleKey.F:
+            FlagTile(selectedX, selectedY);
             break;
         case ConsoleKey.Q:
             quit = true;
@@ -142,7 +146,14 @@ void DrawTile(int x, int y)
     }
     else
     {
-        Console.Write($"■");
+        if(flaggedTile[x,y])
+        {
+            Console.Write("F");
+        }
+        else
+        {
+            Console.Write($"■");
+        }
     }
 }
 
@@ -207,6 +218,11 @@ void OpenTile(int x, int y)
     {
         OpenTile(x - 1, y + 1);
     }
+}
+
+void FlagTile(int x, int y)
+{
+    flaggedTile[x,y] = true;
 }
 
 void CheckIfWon()
