@@ -2,8 +2,8 @@
 
 const byte tileSize = 8;
 const byte amountOfBombs = 8;
-byte[,] tiles = new byte[tileSize, tileSize]; //0 = no bomb, 1 = bomb
-bool[,] openTiles = new bool[tileSize, tileSize]; //false = not open, true = open
+bool[,] bombTiles = new bool[tileSize, tileSize];
+bool[,] openTiles = new bool[tileSize, tileSize];
 bool[,] flaggedTile = new bool[tileSize, tileSize];
 byte selectedX = 0;
 byte selectedY = 0;
@@ -93,9 +93,9 @@ void Controls()
 void DrawBoard()
 {
     Console.WriteLine();
-    for (int x = 0; x < tiles.GetLength(0); x++)
+    for (int x = 0; x < bombTiles.GetLength(0); x++)
     {
-        for (int y = 0; y < tiles.GetLength(1); y++)
+        for (int y = 0; y < bombTiles.GetLength(1); y++)
         {
             //Cursor
             if (selectedX == x && selectedY == y)
@@ -127,7 +127,7 @@ void DrawTile(int x, int y)
 {
     if (openTiles[x, y])
     {
-        if (tiles[x, y] == 1)
+        if (bombTiles[x, y])
         {
             Console.Write($"X");
         }
@@ -167,7 +167,7 @@ void OpenTile(int x, int y)
         SpawnBombs();
     }
 
-    if (tiles[x, y] == 1) //Tile is a bomb-tile
+    if (bombTiles[x, y]) //Tile is a bomb-tile
     {
         lostGame = true;
         DrawBoard(); //Draw the board one last time
@@ -179,42 +179,42 @@ void OpenTile(int x, int y)
         return;
     }
     //Below
-    if (y + 1 < tileSize && tiles[x, y + 1] != 1 && !openTiles[x, y + 1])
+    if (y + 1 < tileSize && !bombTiles[x, y + 1] && !openTiles[x, y + 1])
     {
         OpenTile(x, y + 1);
     }
     // //Below-right
-    if (x + 1 < tileSize && y + 1 < tileSize && tiles[x + 1, y + 1] != 1 && !openTiles[x + 1, y + 1])
+    if (x + 1 < tileSize && y + 1 < tileSize && !bombTiles[x + 1, y + 1] && !openTiles[x + 1, y + 1])
     {
         OpenTile(x + 1, y + 1);
     }
     //Right
-    if (x + 1 < tileSize && tiles[x + 1, y] != 1 && !openTiles[x + 1, y])
+    if (x + 1 < tileSize && !bombTiles[x + 1, y] && !openTiles[x + 1, y])
     {
         OpenTile(x + 1, y);
     }
     // //Top-right
-    if (y - 1 >= 0 && x + 1 < tileSize && tiles[x + 1, y - 1] != 1 && !openTiles[x + 1, y - 1])
+    if (y - 1 >= 0 && x + 1 < tileSize && !bombTiles[x + 1, y - 1] && !openTiles[x + 1, y - 1])
     {
         OpenTile(x + 1, y - 1);
     }
     //Top
-    if (y - 1 >= 0 && tiles[x, y - 1] != 1 && !openTiles[x, y - 1])
+    if (y - 1 >= 0 && !bombTiles[x, y - 1] && !openTiles[x, y - 1])
     {
         OpenTile(x, y - 1);
     }
     // //Top-left
-    if (y - 1 >= 0 && x - 1 >= 0 && tiles[x - 1, y - 1] != 1 && !openTiles[x - 1, y - 1])
+    if (y - 1 >= 0 && x - 1 >= 0 && !bombTiles[x - 1, y - 1] && !openTiles[x - 1, y - 1])
     {
         OpenTile(x - 1, y - 1);
     }
     //Left 
-    if (x - 1 >= 0 && tiles[x - 1, y] != 1 && !openTiles[x - 1, y])
+    if (x - 1 >= 0 && !bombTiles[x - 1, y] && !openTiles[x - 1, y])
     {
         OpenTile(x - 1, y);
     }
     //Below-left
-    if (x - 1 >= 0 && y + 1 < tileSize && tiles[x - 1, y + 1] != 1 && !openTiles[x - 1, y + 1])
+    if (x - 1 >= 0 && y + 1 < tileSize && !bombTiles[x - 1, y + 1] && !openTiles[x - 1, y + 1])
     {
         OpenTile(x - 1, y + 1);
     }
@@ -252,42 +252,42 @@ int GetNumberForTile(int x, int y)
     int bombsAroundTile = 0;
 
     //Below
-    if (y + 1 < tileSize && tiles[x, y + 1] == 1)
+    if (y + 1 < tileSize && bombTiles[x, y + 1])
     {
         bombsAroundTile++;
     }
     //Below-right
-    if (x + 1 < tileSize && y + 1 < tileSize && tiles[x + 1, y + 1] == 1)
+    if (x + 1 < tileSize && y + 1 < tileSize && bombTiles[x + 1, y + 1])
     {
         bombsAroundTile++;
     }
     //Right
-    if (x + 1 < tileSize && tiles[x + 1, y] == 1)
+    if (x + 1 < tileSize && bombTiles[x + 1, y])
     {
         bombsAroundTile++;
     }
     //Top-right
-    if (y - 1 >= 0 && x + 1 < tileSize && tiles[x + 1, y - 1] == 1)
+    if (y - 1 >= 0 && x + 1 < tileSize && bombTiles[x + 1, y - 1])
     {
         bombsAroundTile++;
     }
     //Top
-    if (y - 1 >= 0 && tiles[x, y - 1] == 1)
+    if (y - 1 >= 0 && bombTiles[x, y - 1])
     {
         bombsAroundTile++;
     }
     //Top-left
-    if (y - 1 >= 0 && x - 1 >= 0 && tiles[x - 1, y - 1] == 1)
+    if (y - 1 >= 0 && x - 1 >= 0 && bombTiles[x - 1, y - 1])
     {
         bombsAroundTile++;
     }
     //Left 
-    if (x - 1 >= 0 && tiles[x - 1, y] == 1)
+    if (x - 1 >= 0 && bombTiles[x - 1, y])
     {
         bombsAroundTile++;
     }
     //Below-left
-    if (x - 1 >= 0 && y + 1 < tileSize && tiles[x - 1, y + 1] == 1)
+    if (x - 1 >= 0 && y + 1 < tileSize && bombTiles[x - 1, y + 1])
     {
         bombsAroundTile++;
     }
@@ -306,11 +306,11 @@ void SpawnBombs()
         {
             randX = rand.Next(0, tileSize);
             randY = rand.Next(0, tileSize);
-            if (tiles[randX, randY] != 1 && !openTiles[randX, randY]) //Don't spawn bomb on first clicked tile
+            if (!bombTiles[randX, randY] && !openTiles[randX, randY]) //Don't spawn bomb on first clicked tile
             {
                 break;
             }
         }
-        tiles[randX, randY] = 1;
+        bombTiles[randX, randY] = true;
     }
 }
